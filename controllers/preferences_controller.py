@@ -10,3 +10,9 @@ def get_preferences():
     preference = Preference.query.all()
     result = preferences_schema.dump(preference)
     return jsonify(result)
+
+@preferences.route("/<int:id>", methods=['GET'])
+def get_preference(id):
+    preference = Preference.query.get(id)
+    result = preference_schema.dump(preference)
+    return jsonify(result)

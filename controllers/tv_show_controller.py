@@ -10,3 +10,9 @@ def get_tv_shows():
     tv_shows = Tv_show.query.all()
     result = tv_shows_schema.dump(tv_shows)
     return jsonify(result)
+
+@tv_shows.route("/<int:id>", methods=['GET'])
+def get_tv_show(id):
+    tv_shows = Tv_show.query.get(id)
+    result = tv_show_schema.dump(tv_shows)
+    return jsonify(result)

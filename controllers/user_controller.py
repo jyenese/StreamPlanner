@@ -9,3 +9,9 @@ def get_users():
     user = User.query.all()
     result = users_schema.dump(user)
     return jsonify(result)
+
+@user.route("/<int:id>", methods=['GET'])
+def get_user(id):
+    user = User.query.get(id)
+    result = user_schema.dump(user)
+    return jsonify(result)
