@@ -1,4 +1,4 @@
-from flask import Blueprint,jsonify
+from flask import Blueprint,jsonify, request
 from main import db
 from models.tv_show import Tv_show
 from schemas.tv_show_schemas import tv_show_schema, tv_shows_schema
@@ -14,5 +14,57 @@ def get_tv_shows():
 @tv_shows.route("/<int:id>", methods=['GET'])
 def get_tv_show(id):
     tv_shows = Tv_show.query.get(id)
+    if not tv_shows:
+        return {"error": "tv_show not found"}
     result = tv_show_schema.dump(tv_shows)
     return jsonify(result)
+
+@tv_shows.route("/", methods=['POST'])
+def add_tv_show():
+    tv_show_fields = tv_show_schema.load(request.json)
+    tv_show = Tv_show(
+        title = tv_show_fields['title'],
+        genre = tv_show_fields['genre'],
+        date_added = tv_show_fields['date_added'],
+        netflix = tv_show_fields['netflix'],
+        disney_plus = tv_show_fields['disney_plus'],
+        stan = tv_show_fields['stan'],
+        binge = tv_show_fields['binge'],
+        appletv = tv_show_fields['appletv'],
+        foxtel = tv_show_fields['foxtel'],
+        amazon_prime = tv_show_fields['amazon_prime'],
+    )
+    db.session.add(tv_show)
+    db.session.commit()
+    return jsonify(tv_show_schema.dump(tv_show))
+
+@tv_shows.route("/<int:id>", methods=['DELETE'])
+def delete_tv_show(id):
+    tv_show = Tv_show.query.get(id)
+    if not tv_show:
+        return {"Error":"Tv_show ID not found"}
+    
+    db.session.delete(tv_show)
+    db.session.commit() 
+    return {"message":"TV Show removed"}
+
+@tv_shows.route("/<int:id>", methods=['PUT'])
+def update_tv_show(id):
+    tv_show = Tv_show.query.get(id)
+    if not tv_show:
+        return {"Error":"TV Show ID not found"}
+    
+    tv_show_fields = tv_show_schema.load(request.json)
+    
+    tv_show.title = tv_show_fields['title']
+    tv_show.date_added = tv_show_fields['date_added']
+    tv_show.netflix = tv_show_fields['netflix']
+    tv_show.disney_plus = tv_show_fields['disney_plus']
+    tv_show.stan = tv_show_fields['stan']
+    tv_show.binge = tv_show_fields['binge']
+    tv_show.appletv = tv_show_fields['appletv']
+    tv_show.foxtel = tv_show_fields['foxtel']
+    tv_show.amazon_prime = tv_show_fields['amazon_prime']
+    
+    db.session.commit()
+    return jsonify(tv_show_schema.dump(tv_show))

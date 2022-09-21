@@ -3,9 +3,9 @@ from flask import Blueprint
 from main import db
 from models.movie import Movie
 from models.preferences import Preference
-from models.services import Service
 from models.tv_show import Tv_show
 from models.user import User
+from models.price import Price
 from datetime import date
 
 db_commands = Blueprint("db", __name__)
@@ -25,7 +25,14 @@ def seed_db():
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
-        genre = "Adventure, Sci-fi, Drama"
+        genre = "Adventure,Science-fiction,Drama",
+        netflix = True,
+        disney_plus = False,
+        stan = True,
+        binge = False,
+        appletv = True,
+        foxtel = True,
+        amazon_prime = False
     )
     
     db.session.add(movie1)
@@ -33,7 +40,14 @@ def seed_db():
     tv_show1 = Tv_show(
         title = "House of the dragon",
         date_added = date(2022,8,20),
-        genre = "Action, adventure, drama"
+        genre = "Action, adventure, drama",
+        netflix = True,
+        disney_plus = False,
+        stan = True,
+        binge = False,
+        appletv = True,
+        foxtel = True,
+        amazon_prime = False
     )
     
     db.session.add(tv_show1)
@@ -54,17 +68,7 @@ def seed_db():
     
     db.session.add(preference1)
     
-    services1 = Service(
-        netflix = True,
-        disney_plus = False,
-        stan = True,
-        binge = False,
-        appletv = True,
-        foxtel = True,
-        amazon_prime = False
-    )
     
-    db.session.add(services1)
     
     user1 = User(
         username = "jye",
@@ -73,8 +77,20 @@ def seed_db():
         dob = date(1995,9,22),
         country = "Australia"
     )
-    
     db.session.add(user1)
+    
+    price1 = Price(
+        netflix = 10.99,
+        stan = 11.99,
+        disney_plus = 12.99,
+        binge = 9.99,
+        apple_tv = 10.99,
+        foxtel = 30.99,
+        amazon_prime = 8.99,
+        date = "2022-9-9"
+        
+    )
+    db.session.add(price1)
     
     db.session.commit()
     
