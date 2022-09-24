@@ -2,6 +2,7 @@ from flask import Blueprint, jsonify, request
 from main import db
 from models.movie import Movie
 from schemas.movie_schemas import movie_schema, movies_schema
+from flask_jwt_extended import jwt_required
 
 
 movies = Blueprint('movies',__name__, url_prefix="/movies")
@@ -21,6 +22,7 @@ def get_movie(id):
     return jsonify(result)
 
 @movies.route("/", methods=['POST'])
+@jwt_required()
 def add_movie():
     movie_fields = movie_schema.load(request.json)
     movie = Movie(
@@ -40,6 +42,7 @@ def add_movie():
     return jsonify(movie_schema.dump(movie))
 
 @movies.route("/<int:id>", methods=['DELETE'])
+@jwt_required()
 def delete_movie(id):
     movie = Movie.query.get(id)
     if not movie:
@@ -49,6 +52,7 @@ def delete_movie(id):
     return {"message":"Movie has been deleted from the database"}
 
 @movies.route("/<int:id>", methods=['PUT'])
+@jwt_required()
 def update_movie(id):
     movie = Movie.query.get(id)
     if not movie:

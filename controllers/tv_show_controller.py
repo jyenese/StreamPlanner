@@ -2,6 +2,7 @@ from flask import Blueprint,jsonify, request
 from main import db
 from models.tv_show import Tv_show
 from schemas.tv_show_schemas import tv_show_schema, tv_shows_schema
+from flask_jwt_extended import jwt_required
 
 tv_shows = Blueprint('tv_shows',__name__, url_prefix="/tv_show")
 
@@ -20,6 +21,7 @@ def get_tv_show(id):
     return jsonify(result)
 
 @tv_shows.route("/", methods=['POST'])
+@jwt_required()
 def add_tv_show():
     tv_show_fields = tv_show_schema.load(request.json)
     tv_show = Tv_show(
@@ -39,6 +41,7 @@ def add_tv_show():
     return jsonify(tv_show_schema.dump(tv_show))
 
 @tv_shows.route("/<int:id>", methods=['DELETE'])
+@jwt_required()
 def delete_tv_show(id):
     tv_show = Tv_show.query.get(id)
     if not tv_show:
@@ -49,6 +52,7 @@ def delete_tv_show(id):
     return {"message":"TV Show removed"}
 
 @tv_shows.route("/<int:id>", methods=['PUT'])
+@jwt_required()
 def update_tv_show(id):
     tv_show = Tv_show.query.get(id)
     if not tv_show:

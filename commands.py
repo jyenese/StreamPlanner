@@ -1,11 +1,13 @@
 from operator import truediv
 from flask import Blueprint
 from main import db
+from main import bcrypt
 from models.movie import Movie
 from models.preferences import Preference
 from models.tv_show import Tv_show
 from models.user import User
-from models.price import Price
+from models.price import Price 
+from models.admin import Admin
 from datetime import date
 
 db_commands = Blueprint("db", __name__)
@@ -68,16 +70,48 @@ def seed_db():
     
     db.session.add(preference1)
     
-    
+    admin1 = Admin(
+        username = "admin",
+        password = bcrypt.generate_password_hash("password2").decode("utf-8"),
+        email_address = "admin@example.com",
+    )
+    db.session.add(admin1)
     
     user1 = User(
         username = "jye",
         email_address = "jye@email.com",
-        password = "password",
+        password = bcrypt.generate_password_hash("password").decode("utf-8"),
         dob = date(1995,9,22),
         country = "Australia"
     )
     db.session.add(user1)
+    
+    user2 = User(
+        username = "sam",
+        email_address = "sam@email.com",
+        password = bcrypt.generate_password_hash("password").decode("utf-8"),
+        dob = date(1993,10,11),
+        country = "New Zealand"
+    )
+    db.session.add(user2)
+    
+    user3 = User(
+        username = "taya",
+        email_address = "taya@email.com",
+        password = bcrypt.generate_password_hash("password").decode("utf-8"),
+        dob = date(1997,12,22),
+        country = "France"
+    )
+    db.session.add(user3)
+    
+    user4 = User(
+        username = "Tony",
+        email_address = "Tony@email.com",
+        password = bcrypt.generate_password_hash("password").decode("utf-8"),
+        dob = date(1966,6,28),
+        country = "Indonesia"
+    )
+    db.session.add(user4)
     
     price1 = Price(
         netflix = 10.99,
