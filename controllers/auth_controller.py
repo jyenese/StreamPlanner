@@ -2,6 +2,7 @@ from datetime import timedelta
 from flask import Blueprint, jsonify, request
 from main import db
 from models.user import User
+from models.admin import Admin
 from schemas.user_schemas import user_schema
 from schemas.admin_schema import admin_schema
 from main import bcrypt
@@ -38,7 +39,7 @@ def register_user():
 
 @auth.route('/login', methods=['POST'])
 def login_user():
-    user_fields = admin_schema.load(request.json)
+    user_fields = user_schema.load(request.json)
     user = User.query.filter_by(username=user_fields["username"]).first()
     if not user:
         return {"error": "Username not found"}
@@ -49,3 +50,17 @@ def login_user():
     token = create_access_token(identity=str(user.user_id), expires_delta=timedelta(days=1))
     
     return {"username":user.username, "token":token}
+
+@auth.route('/login/admin', methods=['POST'])
+def login_admin():
+    admin_fields = admin_schema.load(request.json)
+    admin = Admin.query.filter_by(username=admin_fields["username"]).first()
+    if not admin:
+        return {"error": "Username not found"}
+    
+    if not bcrypt.check_password_hash(admin.password, admin_fields["password"]):
+        return {"error":"Wrong password"}
+
+    token = create_access_token(identity="admin", expires_delta=timedelta(days=1))
+    
+    return {"admin":admin.username, "token":token}

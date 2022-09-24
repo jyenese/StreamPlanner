@@ -2,7 +2,7 @@ from flask import Blueprint,jsonify, request
 from main import db
 from models.tv_show import Tv_show
 from schemas.tv_show_schemas import tv_show_schema, tv_shows_schema
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 tv_shows = Blueprint('tv_shows',__name__, url_prefix="/tv_show")
 
@@ -23,6 +23,8 @@ def get_tv_show(id):
 @tv_shows.route("/", methods=['POST'])
 @jwt_required()
 def add_tv_show():
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to add"}
     tv_show_fields = tv_show_schema.load(request.json)
     tv_show = Tv_show(
         title = tv_show_fields['title'],
@@ -43,6 +45,8 @@ def add_tv_show():
 @tv_shows.route("/<int:id>", methods=['DELETE'])
 @jwt_required()
 def delete_tv_show(id):
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to delete"}
     tv_show = Tv_show.query.get(id)
     if not tv_show:
         return {"Error":"Tv_show ID not found"}
@@ -54,6 +58,8 @@ def delete_tv_show(id):
 @tv_shows.route("/<int:id>", methods=['PUT'])
 @jwt_required()
 def update_tv_show(id):
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to update"}
     tv_show = Tv_show.query.get(id)
     if not tv_show:
         return {"Error":"TV Show ID not found"}

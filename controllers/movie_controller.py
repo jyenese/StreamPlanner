@@ -2,13 +2,15 @@ from flask import Blueprint, jsonify, request
 from main import db
 from models.movie import Movie
 from schemas.movie_schemas import movie_schema, movies_schema
-from flask_jwt_extended import jwt_required
+from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 movies = Blueprint('movies',__name__, url_prefix="/movies")
 
 @movies.route("/", methods=['GET'])
+@jwt_required()
 def get_movies():
+    print(get_jwt_identity())
     movies_list = Movie.query.all()
     result = movies_schema.dump(movies_list)
     return jsonify(result)
@@ -24,6 +26,8 @@ def get_movie(id):
 @movies.route("/", methods=['POST'])
 @jwt_required()
 def add_movie():
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to add"}
     movie_fields = movie_schema.load(request.json)
     movie = Movie(
         title = movie_fields['title'],
@@ -44,6 +48,8 @@ def add_movie():
 @movies.route("/<int:id>", methods=['DELETE'])
 @jwt_required()
 def delete_movie(id):
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to delete"}
     movie = Movie.query.get(id)
     if not movie:
         return {"Error":"Movie ID not found"}
@@ -54,6 +60,8 @@ def delete_movie(id):
 @movies.route("/<int:id>", methods=['PUT'])
 @jwt_required()
 def update_movie(id):
+    if get_jwt_identity() != "admin":
+        return{"error": "You do not have permission to update"}
     movie = Movie.query.get(id)
     if not movie:
         return {"Error":"Movie ID not found"}
