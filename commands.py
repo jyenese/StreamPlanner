@@ -9,25 +9,23 @@ from models.user import User
 from models.price import Price 
 from models.admin import Admin
 from datetime import date
+from schemas.genre_schema import List
 
 db_commands = Blueprint("db", __name__)
 
 @db_commands.cli.command('create')
 def create_db():
-    db.create_all()
-    print('Tables have been created')
-    
-@db_commands.cli.command('drop')
-def drop_db():
     db.drop_all()
-    print('Tables have been dropped')
+    db.create_all()
+    print('Tables have been dropped then created')
+    
     
 @db_commands.cli.command('seed')
 def seed_db():
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
-        genre = "Adventure,Science-fiction,Drama",
+        genre = (List.movie,List.adventure, List.science_fiction, List.drama),
         netflix = True,
         disney_plus = False,
         stan = True,
@@ -38,11 +36,26 @@ def seed_db():
     )
     
     db.session.add(movie1)
+    
+    movie2 = Movie(
+        title = "The Martian",
+        date_added = date(2017,2,19),
+        genre = (List.movie,List.adventure, List.science_fiction, List.drama, List.mystery),
+        netflix = True,
+        disney_plus = False,
+        stan = True,
+        binge = False,
+        appletv = True,
+        foxtel = True,
+        amazon_prime = False
+    )
+    
+    db.session.add(movie2)
 
     tv_show1 = Tv_show(
         title = "House of the dragon",
         date_added = date(2022,8,20),
-        genre = "Action, adventure, drama",
+        genre = (List.tv_show, List.action, List.adventure),
         netflix = True,
         disney_plus = False,
         stan = True,
@@ -53,6 +66,21 @@ def seed_db():
     )
     
     db.session.add(tv_show1)
+    
+    tv_show2 = Tv_show(
+        title = "True Blood",
+        date_added = date(2012,4,20),
+        genre = (List.tv_show, List.action, List.mystery, List.horror),
+        netflix = True,
+        disney_plus = False,
+        stan = True,
+        binge = False,
+        appletv = True,
+        foxtel = True,
+        amazon_prime = False
+    )
+    
+    db.session.add(tv_show2)
     
     preference1 = Preference(
         movie = True,
