@@ -23,7 +23,7 @@ def get_movie(id):
     result = movie_schema.dump(movie)
     return jsonify(result)
 
-@movies.route("/", methods=['POST'])
+@movies.route("/add", methods=['POST'])
 @jwt_required()
 def add_movie():
     if get_jwt_identity() != "admin":
@@ -33,13 +33,6 @@ def add_movie():
         title = movie_fields['title'],
         genre = movie_fields['genre'],
         date_added = movie_fields['date_added'],
-        netflix = movie_fields['netflix'],
-        disney_plus = movie_fields['disney_plus'],
-        stan = movie_fields['stan'],
-        binge = movie_fields['binge'],
-        appletv = movie_fields['appletv'],
-        foxtel = movie_fields['foxtel'],
-        amazon_prime = movie_fields['amazon_prime'],
     )
     db.session.add(movie)
     db.session.commit()
@@ -71,13 +64,6 @@ def update_movie(id):
     movie.title = movie_fields['title']
     movie.genre = movie_fields['genre']
     movie.date_added = movie_fields['date_added']
-    movie.netflix = movie_fields['netflix']
-    movie.disney_plus = movie_fields['disney_plus']
-    movie.stan = movie_fields['stan']
-    movie.binge = movie_fields['binge']
-    movie.appletv = movie_fields['appletv']
-    movie.foxtel = movie_fields['foxtel']
-    movie.amazon_prime = movie_fields['amazon_prime']
     
     db.session.commit()
     return jsonify(movie_schema.dump(movie))

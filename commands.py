@@ -5,98 +5,104 @@ from main import bcrypt
 from models.movie import Movie
 from models.preferences import Preference
 from models.tv_show import Tv_show
-from models.user import User
-from models.price import Price 
 from models.admin import Admin
+from models.services import Services
 from datetime import date
-from schemas.genre_schema import List
+from models.MA import MA
+from models.TVA import TVA
+from models.user import User
 
 db_commands = Blueprint("db", __name__)
 
 @db_commands.cli.command('create')
 def create_db():
-    db.drop_all()
     db.create_all()
-    print('Tables have been dropped then created')
+    print('Tables have been created')
+
+@db_commands.cli.command('drop')
+def drop_db():
+    db.drop_all()
+    print('tables have been dropped')
     
     
 @db_commands.cli.command('seed')
 def seed_db():
+    service1 = Services(
+        name = "Netflix",
+        price = 10.99,
+        description = "Worldwide streaming service."
+    )
+    
+    db.session.add(service1)
+    db.session.commit()
+    
+    service2 = Services(
+        name = "Binge",
+        price = 14.99,
+        description = "Australian streaming service."
+    )
+    
+    db.session.add(service2)
+    db.session.commit()
+    
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
-        genre = (List.movie,List.adventure, List.science_fiction, List.drama),
-        netflix = True,
-        disney_plus = False,
-        stan = True,
-        binge = False,
-        appletv = True,
-        foxtel = True,
-        amazon_prime = False
+        genre = "Adventure, Science Fiction, Drama",
+        
     )
     
     db.session.add(movie1)
+    db.session.commit()
     
     movie2 = Movie(
         title = "The Martian",
-        date_added = date(2017,2,19),
-        genre = (List.movie,List.adventure, List.science_fiction, List.drama, List.mystery),
-        netflix = True,
-        disney_plus = False,
-        stan = True,
-        binge = False,
-        appletv = True,
-        foxtel = True,
-        amazon_prime = False
+        date_added = date(2017,8,11),
+        genre = "Adventure, Science Fiction, Comedy",
+        
     )
     
     db.session.add(movie2)
-
-    tv_show1 = Tv_show(
-        title = "House of the dragon",
-        date_added = date(2022,8,20),
-        genre = (List.tv_show, List.action, List.adventure),
-        netflix = True,
-        disney_plus = False,
-        stan = True,
-        binge = False,
-        appletv = True,
-        foxtel = True,
-        amazon_prime = False
+    db.session.commit()
+    
+    movie3 = Movie(
+        title = "Intersteller: Reborn",
+        date_added = date(2024,6,11),
+        genre = "Adventure, Science Fiction, Drama",
+        
     )
     
-    db.session.add(tv_show1)
+    db.session.add(movie3)
+    db.session.commit()
     
-    tv_show2 = Tv_show(
+    tv1 = Tv_show(
         title = "True Blood",
-        date_added = date(2012,4,20),
-        genre = (List.tv_show, List.action, List.mystery, List.horror),
-        netflix = True,
-        disney_plus = False,
-        stan = True,
-        binge = False,
-        appletv = True,
-        foxtel = True,
-        amazon_prime = False
+        date_added = date(2011,4,11),
+        genre = "Adventure, Science Fiction, Drama",
+        
     )
     
-    db.session.add(tv_show2)
+    db.session.add(tv1)
+    db.session.commit()
     
-    preference1 = Preference(
-        movie = True,
-        tv_show = False,
-        action = True,
-        adventure = True,
-        comedy = False,
-        fantasy = True,
-        horror = False,
-        mystery = False,
-        drama = True,
-        science_fiction = True,
-        sport = True
+    tv2 = Tv_show(
+        title = "House of the Dragon",
+        date_added = date(2022,8,3),
+        genre = "Adventure, Science Fiction, Drama, Mystery, Action",
+        
     )
     
-    db.session.add(preference1)
+    db.session.add(tv2)
+    db.session.commit()
+    
+    
+    movie_available1 = MA(
+        movie_id = movie1.movie_id,
+        service_id = service1.service_id
+        
+    )
+    db.session.add(movie_available1)
+    db.session.commit()
     
     admin1 = Admin(
         username = "admin",
@@ -140,19 +146,23 @@ def seed_db():
         country = "Indonesia"
     )
     db.session.add(user4)
-    
-    price1 = Price(
-        netflix = 10.99,
-        stan = 11.99,
-        disney_plus = 12.99,
-        binge = 9.99,
-        apple_tv = 10.99,
-        foxtel = 30.99,
-        amazon_prime = 8.99,
-        date = "2022-9-9"
-        
-    )
-    db.session.add(price1)
-    
     db.session.commit()
+    
+    preference1 = Preference(
+        movie = True,
+        tv_show = False,
+        action = True,
+        adventure = True,
+        comedy = False,
+        fantasy = True,
+        horror = False,
+        mystery = False,
+        drama = True,
+        science_fiction = True,
+        # user_id = user1
+    )
+    
+    db.session.add(preference1)
+    db.session.commit()
+    print("Seeded")
     

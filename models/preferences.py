@@ -13,5 +13,4 @@ class Preference(db.Model):
     mystery = db.Column(db.Boolean)
     drama = db.Column(db.Boolean)
     science_fiction = db.Column(db.Boolean)
-    sport = db.Column(db.Boolean)
     
