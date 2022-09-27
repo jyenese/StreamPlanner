@@ -104,6 +104,14 @@ def seed_db():
     db.session.add(movie_available1)
     db.session.commit()
     
+    tv_available1 = TVA(
+        tv_show_id = tv1.tv_show_id,
+        service_id = service2.service_id
+        
+    )
+    db.session.add(tv_available1)
+    db.session.commit()
+    
     admin1 = Admin(
         username = "admin",
         password = bcrypt.generate_password_hash("password2").decode("utf-8"),
@@ -159,7 +167,7 @@ def seed_db():
         mystery = False,
         drama = True,
         science_fiction = True,
-        # user_id = user1
+        user_id = user1.user_id
     )
     
     db.session.add(preference1)

@@ -13,4 +13,4 @@ class Preference(db.Model):
     mystery = db.Column(db.Boolean)
     drama = db.Column(db.Boolean)
     science_fiction = db.Column(db.Boolean)
-    
+    user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))

@@ -10,4 +10,8 @@ class Services(db.Model):
         "MA",
         backref="services"
     )
+    TVA = db.relationship(
+        "TVA",
+        backref="services"
+    )
     

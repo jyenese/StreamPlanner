@@ -8,3 +8,23 @@ But what If you could figure out a smart plan of attack on what streaming platfo
 
 Most households would have more than 1 streaming platform, just because one has different films/shows that others don't, or some movies are only on for a certain time, and having more than 1 platform generally means more spending! So Id like to save the users money, where somebody can save money and think smarter on which platforms should be bought per month.
 
+<!-- table of movies that has a primary key
+and details about the movie
+
+table of services that has a primary key
+and the details about the service ie, price and name
+
+linking table that joins a movie with service which containts a primary key and a foreign key
+of the movie and a foreign key of the service
+
+
+
+
+
+Seeding 
+
+The movie is only created once
+
+The service is only created once
+
+The linking of tables  -->

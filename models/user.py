@@ -8,4 +8,7 @@ class User(db.Model):
     password = db.Column(db.String(), nullable=False)
     dob = db.Column(db.Date())
     country = db.Column(db.String(), nullable=False)
-
+    preferences = db.relationship(
+        "Preference",
+        backref="users",
+    )
