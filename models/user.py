@@ -10,5 +10,5 @@ class User(db.Model):
     country = db.Column(db.String(), nullable=False)
     preferences = db.relationship(
         "Preference",
-        backref="users",
+        backref="user",
     )

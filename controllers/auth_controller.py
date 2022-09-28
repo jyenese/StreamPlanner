@@ -51,6 +51,8 @@ def login_user():
     
     return {"username":user.username, "token":token}
 
+
+
 @auth.route('/login/admin', methods=['POST'])
 def login_admin():
     admin_fields = admin_schema.load(request.json)

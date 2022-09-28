@@ -1,16 +1,16 @@
 from flask import Blueprint, jsonify, request
 from main import db
 from models.movie import Movie
+from models.MA import MA
 from schemas.movie_schemas import movie_schema, movies_schema
+from schemas.MA_schema import ma_schema, mas_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 movies = Blueprint('movies',__name__, url_prefix="/movies")
 
 @movies.route("/", methods=['GET'])
-@jwt_required()
 def get_movies():
-    print(get_jwt_identity())
     movies_list = Movie.query.all()
     result = movies_schema.dump(movies_list)
     return jsonify(result)
@@ -67,4 +67,19 @@ def update_movie(id):
     
     db.session.commit()
     return jsonify(movie_schema.dump(movie))
+    
+# @movies.route("/available", methods=['GET'])
+# def movies_available():
+#     movies_list = MA.query.all()
+#     result = ma_schema.dump(movies_list)
+#     db.session.commit()
+#     return (jsonify(result))
+
+@movies.route("/available", methods=['GET'])
+def get_movies_available():
+    movies_list = MA.query.all()
+    result = mas_schema.dump(movies_list)
+    return jsonify(result)
+    
+
     
