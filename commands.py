@@ -48,7 +48,7 @@ def seed_db():
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
-        genre = "Adventure, Science Fiction, Drama",
+        genre = "Science Fiction"
         
     )
     
@@ -58,7 +58,7 @@ def seed_db():
     movie2 = Movie(
         title = "The Martian",
         date_added = date(2017,8,11),
-        genre = "Adventure, Science Fiction, Comedy",
+        genre = "Mystery"
         
     )
     
@@ -68,7 +68,7 @@ def seed_db():
     movie3 = Movie(
         title = "Intersteller: Reborn",
         date_added = date(2024,6,11),
-        genre = "Adventure, Science Fiction, Drama",
+        genre = "Comedy"
         
     )
     
@@ -78,7 +78,7 @@ def seed_db():
     tv1 = Tv_show(
         title = "True Blood",
         date_added = date(2011,4,11),
-        genre = "Adventure, Science Fiction, Drama",
+        genre = "Science Fiction"
         
     )
     
@@ -88,7 +88,7 @@ def seed_db():
     tv2 = Tv_show(
         title = "House of the Dragon",
         date_added = date(2022,8,3),
-        genre = "Adventure, Science Fiction, Drama, Mystery, Action",
+        genre = "Adventure"
         
     )
     
@@ -157,8 +157,6 @@ def seed_db():
     db.session.commit()
     
     preference1 = Preference(
-        movie = True,
-        tv_show = False,
         action = True,
         adventure = True,
         comedy = False,

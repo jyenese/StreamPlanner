@@ -4,6 +4,9 @@ from models.movie import Movie
 from models.MA import MA
 from schemas.movie_schemas import movie_schema, movies_schema
 from schemas.MA_schema import ma_schema, mas_schema
+from models.user import User
+from schemas.user_schemas import user_schema
+from schemas.preferences_schema import preference_schema, preferences_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
@@ -68,18 +71,34 @@ def update_movie(id):
     db.session.commit()
     return jsonify(movie_schema.dump(movie))
     
-# @movies.route("/available", methods=['GET'])
-# def movies_available():
-#     movies_list = MA.query.all()
-#     result = ma_schema.dump(movies_list)
-#     db.session.commit()
-#     return (jsonify(result))
 
 @movies.route("/available", methods=['GET'])
 def get_movies_available():
     movies_list = MA.query.all()
     result = mas_schema.dump(movies_list)
     return jsonify(result)
+
+#delete movies/tv shows out of prefrences
+@movies.route("/recommendations", methods=['GET'])
+@jwt_required()
+def get_movie_recommendations():
+    if not get_jwt_identity():
+        return {"error": "User not found"}
+    user_id = get_jwt_identity() 
+    user = User.query.get(user_id)
+    movies = {}
+    preferences = preferences_schema.dump(user.preferences)
+    preference = preferences[0]
+    if preference["mystery"] == True:
+        mystery = Movie.query.filter_by(genre="Mystery").all()
+        for movie in mystery:
+            movies[movie.movie_id] = movie
+    if preference["adventure"] == True:
+        adventure = Movie.query.filter_by(genre="Adventure")
+        for movie in adventure:
+            movies[movie.movie_id] = movie  
+        print(adventure)        
+    return jsonify(movies)
     
 
     

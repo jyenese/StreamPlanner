@@ -1,16 +1,18 @@
 from datetime import timedelta
+from doctest import debug_script
 from flask import Blueprint, jsonify, request
 from main import db
 from models.user import User
 from models.admin import Admin
+from models.services import Services
+from schemas.service_schema import services_schema, service_schema
 from schemas.user_schemas import user_schema
 from schemas.admin_schema import admin_schema
 from main import bcrypt
 from main import jwt
-from flask_jwt_extended import create_access_token
+from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 auth = Blueprint('auth',__name__, url_prefix="/auth")
-
 
 @auth.route('/register', methods=['POST'])
 def register_user():
@@ -66,3 +68,54 @@ def login_admin():
     token = create_access_token(identity="admin", expires_delta=timedelta(days=1))
     
     return {"admin":admin.username, "token":token}
+
+@auth.route("/services", methods=['GET'])
+def get_services():
+    service = Services.query.all()
+    result = services_schema.dump(service)
+    return jsonify(result)
+
+@auth.route("/services/add", methods=['POST'])
+@jwt_required()
+def add_service():
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to add"}
+    service_fields = service_schema.load(request.json)
+    service = Services(
+        service_id = service_fields.get("id"),
+        name = service_fields.get("name"),
+        price = service_fields.get("price"),
+        description = service_fields.get("description")
+    )
+    db.session.add(service)
+    db.session.commit()
+    return jsonify(service_schema.dump(service))
+
+@auth.route("/services/delete/<int:id>", methods=['DELETE'])
+@jwt_required()
+def delete_service(id):
+    if get_jwt_identity() != "admin":
+        return {"error": "You do not have permission to add"}
+    service = Services.query.get(id)
+    if not service:
+        return {"error": "Service ID not found"}
+    db.session.delete(service)
+    db.session.commit()
+    return{"message":"Movie has been deleted from the database"}
+
+@auth.route("/services/update/<int:id>", methods=["PUT"])
+@jwt_required()
+def update_service(id):
+    if get_jwt_identity() != "admin":
+        return{"error": "You do not have permission to update"}
+    service = Services.query.get(id)
+    if not service:
+        return {"error": "Service ID not found"}
+    
+    service_fields = service_schema.load(request.json)
+    service.name = service_fields["name"]
+    service.price = service_fields["price"]
+    service.description = service_fields["description"]
+    
+    db.session.commit()
+    return jsonify(service_schema.dump(service))
