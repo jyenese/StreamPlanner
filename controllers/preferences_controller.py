@@ -23,16 +23,14 @@ def get_preference(id):
 
 @preferences.route("/add", methods=['POST'])
 @jwt_required()
-def add_preference(user_id):
+def add_preference():
+    user_id = get_jwt_identity() 
     user = User.query.get(user_id)
     if not user:
-        return {"Error":"Username not found"}
-    
+        return {"error":"User not found"}
     
     preference_fields = preference_schema.load(request.json)
     preference = Preference(
-        movie = preference_fields["movie"],
-        tv_show = preference_fields["tv_show"],
         action = preference_fields["action"],
         adventure = preference_fields["adventure"],
         comedy = preference_fields["comedy"],
@@ -40,8 +38,7 @@ def add_preference(user_id):
         horror = preference_fields["horror"],
         mystery = preference_fields["mystery"],
         drama = preference_fields["drama"],
-        science_fiction = preference_fields["science_fiction"],
-        user_id = preference_fields["user_id"]   
+        science_fiction = preference_fields["science_fiction"],  
     )
     db.session.add(preference)
     db.session.commit()

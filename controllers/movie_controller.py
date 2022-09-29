@@ -14,6 +14,21 @@ movies = Blueprint('movies',__name__, url_prefix="/movies")
 
 @movies.route("/", methods=['GET'])
 def get_movies():
+    if request.query_string:
+        if request.args.get('genre'):
+            filtered = Movie.query.filter_by(genre=request.args.get('genre'))
+            result = movies_schema.dump(filtered)
+            return jsonify(result)
+        if request.args.get('title'):
+            filtered = Movie.query.filter_by(title=request.args.get('title'))
+            result = movies_schema.dump(filtered)
+            return jsonify(result)
+        if request.args.get('date_added'):
+            filtered = Movie.query.filter_by(date_added=request.args.get('date_added'))
+            result = movies_schema.dump(filtered)
+            return jsonify(result)
+        else:
+            return {"Error":"No movie found based on your search."}
     movies_list = Movie.query.all()
     result = movies_schema.dump(movies_list)
     return jsonify(result)
@@ -41,7 +56,7 @@ def add_movie():
     db.session.commit()
     return jsonify(movie_schema.dump(movie))
 
-@movies.route("/<int:id>", methods=['DELETE'])
+@movies.route("/delete/<int:id>", methods=['DELETE'])
 @jwt_required()
 def delete_movie(id):
     if get_jwt_identity() != "admin":
@@ -53,7 +68,7 @@ def delete_movie(id):
     db.session.commit()    
     return {"message":"Movie has been deleted from the database"}
 
-@movies.route("/<int:id>", methods=['PUT'])
+@movies.route("/update/<int:id>", methods=['PUT'])
 @jwt_required()
 def update_movie(id):
     if get_jwt_identity() != "admin":
@@ -78,7 +93,6 @@ def get_movies_available():
     result = mas_schema.dump(movies_list)
     return jsonify(result)
 
-#delete movies/tv shows out of prefrences
 @movies.route("/recommendations", methods=['GET'])
 @jwt_required()
 def get_movie_recommendations():
@@ -89,16 +103,14 @@ def get_movie_recommendations():
     movies = {}
     preferences = preferences_schema.dump(user.preferences)
     preference = preferences[0]
-    if preference["mystery"] == True:
-        mystery = Movie.query.filter_by(genre="Mystery").all()
+    if preference["comedy"] == True:
+        mystery = Movie.query.filter_by(genre="comedy").all()
         for movie in mystery:
             movies[movie.movie_id] = movie
-    if preference["adventure"] == True:
-        adventure = Movie.query.filter_by(genre="Adventure")
-        for movie in adventure:
-            movies[movie.movie_id] = movie  
-        print(adventure)        
-    return jsonify(movies)
+        return jsonify(movie_schema.dump(movie))
+      
+    
+    
     
 
     

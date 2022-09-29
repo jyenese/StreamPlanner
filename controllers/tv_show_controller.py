@@ -2,8 +2,10 @@ from flask import Blueprint,jsonify, request
 from main import db
 from models.tv_show import Tv_show
 from models.TVA import TVA
+from models.user import User
 from schemas.tv_show_schemas import tv_show_schema, tv_shows_schema
 from schemas.TVA_schema import tva_schema, tvas_schema
+from schemas.preferences_schema import preferences_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
 tv_shows = Blueprint('tv_shows',__name__, url_prefix="/tv_show")
@@ -11,6 +13,21 @@ tv_shows = Blueprint('tv_shows',__name__, url_prefix="/tv_show")
 #Shows a list of all TV shows.
 @tv_shows.route("/", methods=['GET'])
 def get_tv_shows():
+    if request.query_string:
+        if request.args.get('genre'):
+            filtered = Tv_show.query.filter_by(genre=request.args.get('genre'))
+            result = tv_shows_schema.dump(filtered)
+            return jsonify(result)
+        if request.args.get('title'):
+            filtered = Tv_show.query.filter_by(title=request.args.get('title'))
+            result = tv_shows_schema.dump(filtered)
+            return jsonify(result)
+        if request.args.get('date_added'):
+            filtered = Tv_show.query.filter_by(date_added=request.args.get('date_added'))
+            result = tv_shows_schema.dump(filtered)
+            return jsonify(result)
+        else:
+            return {"Error":"No TV show found based on your search."}
     tv_shows = Tv_show.query.all()
     result = tv_shows_schema.dump(tv_shows)
     return jsonify(result)
@@ -74,8 +91,18 @@ def update_tv_show(id):
     return jsonify(tv_show_schema.dump(tv_show))
 
 #Showing an example of how it would work, The ID of TV show with the service its on
-@tv_shows.route("/available", methods=['GET'])
-def get_tv_available():
-    list = TVA.query.all()
-    result = tvas_schema.dump(list)
-    return jsonify(result)
+@tv_shows.route("/recommendations", methods=['GET'])
+@jwt_required()
+def get_tv_recommendations():
+    if not get_jwt_identity():
+        return {"error": "User not found"}
+    user_id = get_jwt_identity() 
+    user = User.query.get(user_id)
+    tv_shows = {}
+    preferences = preferences_schema.dump(user.preferences)
+    preference = preferences[0]
+    if preference["adventure"] == True:
+        adventure = Tv_show.query.filter_by(genre="adventure").all()
+        for tv_show in adventure:
+            tv_shows[tv_show.tv_show_id] = tv_shows
+        return jsonify(tv_show_schema.dump(tv_show))
