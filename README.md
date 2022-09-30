@@ -22,7 +22,7 @@ First of all, the benefits of using an ORM were unreal straight from the start, 
 
 # Document all endpoints for your API
 
-# Auth Endpoints
+# User Endpoints
 
 ### **/user/register** POST
 
@@ -81,6 +81,8 @@ Same as above route, needing the admin token, so JWT is authenticating this rout
 ### **/user/services/update/<int:id>** PUT
 
 Admin token needed again, JWT authentication. Once connected, fields are loaded with the service schema, then the fields that need to be placed in the put request. "Name, price, description" onces submitted, the route is committed and published by jsonify.
+
+# Movie Endpoints
 
 ### **/movies** GET
 
