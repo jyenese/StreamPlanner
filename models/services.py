@@ -6,12 +6,12 @@ class Services(db.Model):
     name = db.Column(db.String(255), nullable=False)
     price = db.Column(db.Integer)
     description = db.Column(db.String(255), nullable=False)
-    MA = db.relationship(
-        "MA",
+    movies = db.relationship(
+        "Movie",
         backref="services"
     )
-    TVA = db.relationship(
-        "TVA",
+    tv_show = db.relationship(
+        "Tv_show",
         backref="services"
     )
     

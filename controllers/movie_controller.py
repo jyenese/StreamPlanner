@@ -1,9 +1,7 @@
 from flask import Blueprint, jsonify, request
 from main import db
 from models.movie import Movie
-from models.MA import MA
 from schemas.movie_schemas import movie_schema, movies_schema
-from schemas.MA_schema import ma_schema, mas_schema
 from models.user import User
 from schemas.user_schemas import user_schema
 from schemas.preferences_schema import preference_schema, preferences_schema
@@ -13,7 +11,8 @@ from flask_jwt_extended import jwt_required, get_jwt_identity
 
 
 movies = Blueprint('movies',__name__, url_prefix="/movies")
-
+#The first request, A GET request, shows all of the movies in the database, has request query strings attatched
+# for if users want to get fancy and search the route with specific parameters.
 @movies.route("/", methods=['GET'])
 def get_movies():
     if request.query_string:
@@ -33,7 +32,7 @@ def get_movies():
             return {"Error":"You may have typed, genre, title, or date_added wrong."}, 200
     movies_list = Movie.query.all()
     result = movies_schema.dump(movies_list)
-    return jsonify(result),200
+    return jsonify(movies_schema.dump(result)),200
 
 @movies.route("/<int:id>", methods=['GET'])
 def get_movie(id):
@@ -53,6 +52,7 @@ def add_movie():
         title = movie_fields['title'],
         genre = movie_fields['genre'],
         date_added = movie_fields['date_added'],
+        service_id = movie_fields['service_id'],
     )
     db.session.add(movie)
     db.session.commit()
@@ -88,11 +88,6 @@ def update_movie(id):
     db.session.commit()
     return jsonify(movie_schema.dump(movie)),201   
 
-@movies.route("/available", methods=['GET'])
-def get_movies_available():
-    movies_list = MA.query.all()
-    result = mas_schema.dump(movies_list)
-    return jsonify(result)
 
 @movies.route("/recommendations", methods=['GET'])
 @jwt_required()
@@ -105,12 +100,11 @@ def get_movie_recommendations():
     preferences = preferences_schema.dump(user.preferences)
     preference = preferences[0]
     if preference["comedy"] == True:
-        comedy = MA.query.all(), Movie.query.filter_by(genre="comedy").all(), Services.query.filter_by(price=11)
+        comedy = Movie.query.filter_by(genre="comedy").all()
         for movie in comedy:
-            movies[Movie.movie_id] = movies
-            print(movies)    
-        return jsonify(movie_schema.dump(movie),services_schema.dump(movie))
-    
+            movies[movie.movie_id] = movies
+            print(movie)    
+        return jsonify(movie_schema.dump(movie))
 
     
 

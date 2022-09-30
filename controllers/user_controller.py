@@ -5,19 +5,19 @@ from main import db
 from models.user import User
 from models.admin import Admin
 from models.services import Services
-from models.MA import MA
+from models.preferences import Preference
 from schemas.service_schema import services_schema, service_schema
 from schemas.user_schemas import user_schema
 from schemas.admin_schema import admin_schema
-from schemas.MA_schema import ma_schema, mas_schema
+from schemas.preferences_schema import preference_schema, preferences_schema
 from main import bcrypt
 from main import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
-auth = Blueprint('auth',__name__, url_prefix="/auth")
+user = Blueprint('user',__name__, url_prefix="/user")
 
 #The official register, can't use any other features without a user_id, after user is made, token is provided
-@auth.route('/register', methods=['POST'])
+@user.route('/register', methods=['POST'])
 def register_user():
     user_fields = user_schema.load(request.json)
     
@@ -44,12 +44,12 @@ def register_user():
 
 # Logging in with your username and password, if you dont have one it will come up with an error.
 # Once logged in you can view your recommendations
-@auth.route('/login', methods=['POST'])
+@user.route('/login', methods=['POST'])
 def login_user():
     user_fields = user_schema.load(request.json)
     user = User.query.filter_by(username=user_fields["username"]).first()
     if not user:
-        return {"error": "Username not found"}
+        return {"error": "Wrong Username"}
     
     if not bcrypt.check_password_hash(user.password, user_fields["password"]):
         return {"error":"Wrong password"}
@@ -61,7 +61,7 @@ def login_user():
 
 #Admin login, no register for this user, only created in the hardcode. Has ability to Add/Delete/Update
 # Also has the ability to add services to movies.
-@auth.route('/login/admin', methods=['POST'])
+@user.route('/login/admin', methods=['POST'])
 def login_admin():
     admin_fields = admin_schema.load(request.json)
     admin = Admin.query.filter_by(username=admin_fields["username"]).first()
@@ -75,13 +75,78 @@ def login_admin():
     
     return {"admin":admin.username, "token":token}
 
-@auth.route("/services", methods=['GET'])
+@user.route("/preferences", methods=['GET'])
+@jwt_required()
+def get_preferences():
+    preference = Preference.query.all()
+    result = preferences_schema.dump(preference)
+    return jsonify(result)
+
+@user.route("/preferences/<int:id>", methods=['GET'])
+@jwt_required()
+def get_preference(id):
+    if get_jwt_identity() != "admin":
+        return{"error": "You do not have permission to update"}, 401
+    preference = Preference.query.get(id)
+    if not preference:
+        return {"Error":"Preference ID not found"}, 200
+    preference = Preference.query.get(id)
+    result = preference_schema.dump(preference)
+    return jsonify(result)
+
+@user.route("preferences/add", methods=['POST'])
+@jwt_required()
+def add_preference():
+    user_id = get_jwt_identity() 
+    user = User.query.get(user_id)
+    if not user:
+        return {"error":"User not found"}
+    
+    preference_fields = preference_schema.load(request.json)
+    preference = Preference(
+        action = preference_fields["action"],
+        adventure = preference_fields["adventure"],
+        comedy = preference_fields["comedy"],
+        fantasy = preference_fields["fantasy"],
+        horror = preference_fields["horror"],
+        mystery = preference_fields["mystery"],
+        drama = preference_fields["drama"],
+        science_fiction = preference_fields["science_fiction"],  
+    )
+    db.session.add(preference)
+    db.session.commit()
+    return jsonify(preference_schema.dump(preference))
+
+#need help changing the int:id to username or something more useful
+@user.route("/preferences/update/<int:id>", methods=["PUT"])
+@jwt_required()
+def preferences_update(id):
+    user_id = get_jwt_identity() 
+    user = User.query.get(user_id)
+    if not user:
+        return {"error":"User not found"}
+    preference = Preference.query.get(id)
+    preference_fields = preference_schema.load(request.json)
+    preference.action = preference_fields["action"]
+    preference.adventure = preference_fields["adventure"]
+    preference.comedy = preference_fields["comedy"]
+    preference.fantasy = preference_fields["fantasy"]
+    preference.horror = preference_fields["horror"]
+    preference.mystery = preference_fields["mystery"]
+    preference.drama = preference_fields["drama"]
+    preference.science_fiction = preference_fields["science_fiction"]
+    db.session.commit()
+    return jsonify(preference_schema.dump(preference))
+    
+
+
+@user.route("/services", methods=['GET'])
 def get_services():
     service = Services.query.all()
     result = services_schema.dump(service)
     return jsonify(result)
 
-@auth.route("/services/add", methods=['POST'])
+@user.route("/services/add", methods=['POST'])
 @jwt_required()
 def add_service():
     if get_jwt_identity() != "admin":
@@ -96,7 +161,7 @@ def add_service():
     db.session.commit()
     return jsonify(service_schema.dump(service))
 
-@auth.route("/services/delete/<int:id>", methods=['DELETE'])
+@user.route("/services/delete/<int:id>", methods=['DELETE'])
 @jwt_required()
 def delete_service(id):
     if get_jwt_identity() != "admin":
@@ -108,7 +173,7 @@ def delete_service(id):
     db.session.commit()
     return{"message":"Movie has been deleted from the database"}
 
-@auth.route("/services/update/<int:id>", methods=["PUT"])
+@user.route("/services/update/<int:id>", methods=["PUT"])
 @jwt_required()
 def update_service(id):
     if get_jwt_identity() != "admin":
@@ -124,20 +189,21 @@ def update_service(id):
     
     db.session.commit()
     return jsonify(service_schema.dump(service))
-#"Need help here"
-@auth.route("/services/movies", methods=["POST"])
-@jwt_required()
-def service_movie_add():
-    if get_jwt_identity() != "admin":
-        return{"error": "You do not have permission to update"}
-    ma_fields = ma_schema.load(request.json)
-    ma = MA(
-        movies = ma_fields.get("<int:id>"),
-        services =ma_fields.get("")
-    )
-    db.session.add(ma)
-    db.session.commit()
-    return jsonify(ma_schema.dump(ma))
+
+# #"Need help here"
+# @auth.route("/services/movies", methods=["POST"])
+# @jwt_required()
+# def service_movie_add():
+#     if get_jwt_identity() != "admin":
+#         return{"error": "You do not have permission to update"}
+#     ma_fields = ma_schema.load(request.json)
+#     ma = MA(
+#         movies = ma_fields.get("<int:id>"),
+#         # services =ma_fields.get("")
+#     )
+#     db.session.add(ma)
+#     db.session.commit()
+#     return jsonify(ma_schema.dump(ma))
 
 
     

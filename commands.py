@@ -8,8 +8,6 @@ from models.tv_show import Tv_show
 from models.admin import Admin
 from models.services import Services
 from datetime import date
-from models.MA import MA
-from models.TVA import TVA
 from models.user import User
 
 db_commands = Blueprint("db", __name__)
@@ -66,7 +64,8 @@ def seed_db():
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
-        genre = "science_fiction"
+        genre = "science_fiction",
+        service_id = service4.service_id
         
     )
     
@@ -76,7 +75,8 @@ def seed_db():
     movie2 = Movie(
         title = "The Martian",
         date_added = date(2017,8,11),
-        genre = "mystery"
+        genre = "mystery",
+        service_id = service3.service_id
         
     )
     
@@ -86,17 +86,30 @@ def seed_db():
     movie3 = Movie(
         title = "Intersteller: Reborn",
         date_added = date(2024,6,11),
-        genre = "comedy"
+        genre = "comedy",
+        service_id = service1.service_id
         
     )
     
     db.session.add(movie3)
     db.session.commit()
     
+    movie4 = Movie(
+        title = "Mean Girls",
+        date_added = date(2007,6,11),
+        genre = "comedy",
+        service_id = service2.service_id,
+        
+    )
+    
+    db.session.add(movie4)
+    db.session.commit()
+    
     tv1 = Tv_show(
         title = "True Blood",
         date_added = date(2011,4,11),
-        genre = "science_fiction"
+        genre = "science_fiction",
+        service_id = service4.service_id
         
     )
     
@@ -106,29 +119,24 @@ def seed_db():
     tv2 = Tv_show(
         title = "House of the Dragon",
         date_added = date(2022,8,3),
-        genre = "adventure"
-        
-    )
-    
-    db.session.add(tv2)
-    db.session.commit()
-    
-    
-    movie_available1 = MA(
-        movie_id = movie1.movie_id,
-        service_id = service1.service_id
-        
-    )
-    db.session.add(movie_available1)
-    db.session.commit()
-    
-    tv_available1 = TVA(
-        tv_show_id = tv1.tv_show_id,
+        genre = "adventure",
         service_id = service2.service_id
         
     )
-    db.session.add(tv_available1)
+    db.session.add(tv2)
     db.session.commit()
+    
+    tv3 = Tv_show(
+        title = "Survivor",
+        date_added = date(2001,4,11),
+        genre = "science_fiction",
+        service_id = service1.service_id
+        
+    )
+    
+    db.session.add(tv3)
+    db.session.commit()
+    
     
     admin1 = Admin(
         username = "admin",
@@ -180,7 +188,7 @@ def seed_db():
         comedy = True,
         fantasy = True,
         horror = True,
-        mystery = False,
+        mystery = True,
         drama = True,
         science_fiction = True,
         user_id = user1.user_id

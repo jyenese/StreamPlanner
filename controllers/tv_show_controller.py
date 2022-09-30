@@ -1,10 +1,8 @@
 from flask import Blueprint,jsonify, request
 from main import db
 from models.tv_show import Tv_show
-from models.TVA import TVA
 from models.user import User
 from schemas.tv_show_schemas import tv_show_schema, tv_shows_schema
-from schemas.TVA_schema import tva_schema, tvas_schema
 from schemas.preferences_schema import preferences_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from schemas.service_schema import service_schema, services_schema
@@ -107,4 +105,9 @@ def get_tv_recommendations():
         adventure = Tv_show.query.filter_by(genre="adventure").all()
         for tv_show in adventure:
             tv_shows[tv_show.tv_show_id] = tv_shows
-        return jsonify(tv_show_schema.dump(tv_show))
+            return jsonify(tv_show_schema.dump(tv_show))
+    if preference["science_fiction"] == True:
+        science_fiction = Tv_show.query.filter_by(genre="science_fiction").all()
+        for tv_show in science_fiction:
+            tv_shows[tv_show.tv_show_id] = tv_shows
+        return jsonify(tv_show_schema.dump(tv_shows))
