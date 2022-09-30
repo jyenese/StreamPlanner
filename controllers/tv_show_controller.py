@@ -7,6 +7,8 @@ from schemas.tv_show_schemas import tv_show_schema, tv_shows_schema
 from schemas.TVA_schema import tva_schema, tvas_schema
 from schemas.preferences_schema import preferences_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
+from schemas.service_schema import service_schema, services_schema
+from models.services import Services
 
 tv_shows = Blueprint('tv_shows',__name__, url_prefix="/tv_show")
 

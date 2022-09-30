@@ -45,6 +45,24 @@ def seed_db():
     db.session.add(service2)
     db.session.commit()
     
+    service3 = Services(
+        name = "Stan",
+        price = 9.99,
+        description = "Australian streaming service."
+    )
+    
+    db.session.add(service3)
+    db.session.commit()
+    
+    service4 = Services(
+        name = "Amazon_Prime",
+        price = 11.99,
+        description = "Worldwide streaming service."
+    )
+    
+    db.session.add(service4)
+    db.session.commit()
+    
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),

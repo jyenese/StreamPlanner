@@ -5,15 +5,18 @@ from main import db
 from models.user import User
 from models.admin import Admin
 from models.services import Services
+from models.MA import MA
 from schemas.service_schema import services_schema, service_schema
 from schemas.user_schemas import user_schema
 from schemas.admin_schema import admin_schema
+from schemas.MA_schema import ma_schema, mas_schema
 from main import bcrypt
 from main import jwt
 from flask_jwt_extended import create_access_token, jwt_required, get_jwt_identity
 
 auth = Blueprint('auth',__name__, url_prefix="/auth")
 
+#The official register, can't use any other features without a user_id, after user is made, token is provided
 @auth.route('/register', methods=['POST'])
 def register_user():
     user_fields = user_schema.load(request.json)
@@ -39,6 +42,8 @@ def register_user():
     
     return {"username":user.username, "token":token}
 
+# Logging in with your username and password, if you dont have one it will come up with an error.
+# Once logged in you can view your recommendations
 @auth.route('/login', methods=['POST'])
 def login_user():
     user_fields = user_schema.load(request.json)
@@ -54,7 +59,8 @@ def login_user():
     return {"username":user.username, "token":token}
 
 
-
+#Admin login, no register for this user, only created in the hardcode. Has ability to Add/Delete/Update
+# Also has the ability to add services to movies.
 @auth.route('/login/admin', methods=['POST'])
 def login_admin():
     admin_fields = admin_schema.load(request.json)
@@ -82,7 +88,6 @@ def add_service():
         return {"error": "You do not have permission to add"}
     service_fields = service_schema.load(request.json)
     service = Services(
-        service_id = service_fields.get("id"),
         name = service_fields.get("name"),
         price = service_fields.get("price"),
         description = service_fields.get("description")
@@ -119,3 +124,20 @@ def update_service(id):
     
     db.session.commit()
     return jsonify(service_schema.dump(service))
+#"Need help here"
+@auth.route("/services/movies", methods=["POST"])
+@jwt_required()
+def service_movie_add():
+    if get_jwt_identity() != "admin":
+        return{"error": "You do not have permission to update"}
+    ma_fields = ma_schema.load(request.json)
+    ma = MA(
+        movies = ma_fields.get("<int:id>"),
+        services =ma_fields.get("")
+    )
+    db.session.add(ma)
+    db.session.commit()
+    return jsonify(ma_schema.dump(ma))
+
+
+    
