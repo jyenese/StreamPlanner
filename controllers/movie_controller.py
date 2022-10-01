@@ -84,6 +84,7 @@ def update_movie(id):
     movie.title = movie_fields['title']
     movie.genre = movie_fields['genre']
     movie.date_added = movie_fields['date_added']
+    movie.service_id = movie_fields['service_id']
     
     db.session.commit()
     return jsonify(movie_schema.dump(movie)),201   

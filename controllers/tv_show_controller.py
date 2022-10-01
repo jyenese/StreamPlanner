@@ -52,6 +52,7 @@ def add_tv_show():
         title = tv_show_fields['title'],
         genre = tv_show_fields['genre'],
         date_added = tv_show_fields['date_added'],
+        service_id = tv_show_fields['service_id'],
     )
     db.session.add(tv_show)
     db.session.commit()
@@ -86,6 +87,7 @@ def update_tv_show(id):
     tv_show.title = tv_show_fields['title']
     tv_show.genre = tv_show_fields['genre']
     tv_show.date_added = tv_show_fields['date_added']
+    tv_show.service_id = tv_show_fields['service_id']
     
     db.session.commit()
     return jsonify(tv_show_schema.dump(tv_show))
