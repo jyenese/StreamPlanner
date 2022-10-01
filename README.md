@@ -167,6 +167,7 @@ Admin token needed again, JWT authentication. Once connected, fields are loaded 
 
 <details>
 <summary>ERD</summary>
+
 ![ERD](/screenshots/ERD.png)
 
 The USERS table in my ERD is the starting block for this API, without the user theres no point in the database. The users details all have a part to play in the product, especially when one to many relationship with the Preference table, the preferences for each user allows the database to store seperate data for each user and what types of movies/tv shows via genre they like. The structure of StreamPlanner truly runs of what types of genre the user likes.
@@ -177,6 +178,7 @@ The Movie and TV Show tables are spitting images of eachother apart from the Pri
 
 <details>
 <summary>Examples:</summary>
+
 ![image](screenshots/examplemovie.png)
 ![image](screenshots/exampletv.png)
 </details>
