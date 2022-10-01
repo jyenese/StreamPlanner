@@ -25,47 +25,47 @@ def drop_db():
     
 @db_commands.cli.command('seed')
 def seed_db():
-    service1 = Services(
+    netflix = Services(
         name = "Netflix",
         price = 10.99,
         description = "Worldwide streaming service."
     )
     
-    db.session.add(service1)
+    db.session.add(netflix)
     db.session.commit()
     
-    service2 = Services(
+    binge = Services(
         name = "Binge",
         price = 14.99,
         description = "Australian streaming service."
     )
     
-    db.session.add(service2)
+    db.session.add(binge)
     db.session.commit()
     
-    service3 = Services(
+    stan = Services(
         name = "Stan",
         price = 9.99,
         description = "Australian streaming service."
     )
     
-    db.session.add(service3)
+    db.session.add(stan)
     db.session.commit()
     
-    service4 = Services(
+    amazon_prime = Services(
         name = "Amazon_Prime",
         price = 11.99,
         description = "Worldwide streaming service."
     )
     
-    db.session.add(service4)
+    db.session.add(amazon_prime)
     db.session.commit()
     
     movie1 = Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
         genre = "science_fiction",
-        service_id = service4.service_id
+        service_id = netflix.service_id
         
     )
     
@@ -76,7 +76,7 @@ def seed_db():
         title = "The Martian",
         date_added = date(2017,8,11),
         genre = "mystery",
-        service_id = service3.service_id
+        service_id = netflix.service_id
         
     )
     
@@ -87,7 +87,7 @@ def seed_db():
         title = "Intersteller: Reborn",
         date_added = date(2024,6,11),
         genre = "comedy",
-        service_id = service1.service_id
+        service_id = stan.service_id
         
     )
     
@@ -98,7 +98,7 @@ def seed_db():
         title = "Mean Girls",
         date_added = date(2007,6,11),
         genre = "comedy",
-        service_id = service2.service_id,
+        service_id = amazon_prime.service_id,
         
     )
     
@@ -109,7 +109,7 @@ def seed_db():
         title = "True Blood",
         date_added = date(2011,4,11),
         genre = "science_fiction",
-        service_id = service4.service_id
+        service_id = stan.service_id
         
     )
     
@@ -120,21 +120,20 @@ def seed_db():
         title = "House of the Dragon",
         date_added = date(2022,8,3),
         genre = "adventure",
-        service_id = service2.service_id
+        service_id = stan.service_id
         
     )
     db.session.add(tv2)
     db.session.commit()
     
-    tv3 = Tv_show(
+    
+    db.session.add(Tv_show(
         title = "Survivor",
         date_added = date(2001,4,11),
         genre = "science_fiction",
-        service_id = service1.service_id
+        service_id = netflix.service_id
         
-    )
-    
-    db.session.add(tv3)
+    ))
     db.session.commit()
     
     

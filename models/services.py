@@ -8,10 +8,10 @@ class Services(db.Model):
     description = db.Column(db.String(255), nullable=False)
     movies = db.relationship(
         "Movie",
-        backref="services"
+        backref="service"
     )
     tv_show = db.relationship(
         "Tv_show",
-        backref="services"
+        backref="service"
     )
     

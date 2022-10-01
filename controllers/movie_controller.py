@@ -1,3 +1,4 @@
+from itertools import count
 from flask import Blueprint, jsonify, request
 from main import db
 from models.movie import Movie
@@ -6,6 +7,7 @@ from models.user import User
 from schemas.user_schemas import user_schema
 from schemas.preferences_schema import preference_schema, preferences_schema
 from models.services import Services
+from models.preferences import all_preferences
 from schemas.service_schema import service_schema, services_schema
 from flask_jwt_extended import jwt_required, get_jwt_identity
 
@@ -19,14 +21,20 @@ def get_movies():
         if request.args.get('genre'):
             filtered = Movie.query.filter_by(genre=request.args.get('genre'))
             result = movies_schema.dump(filtered)
+            if len(result) == 0:
+                return {"Error":"Your search returned zero results"},404
             return jsonify(result)
         if request.args.get('title'):
             filtered = Movie.query.filter_by(title=request.args.get('title'))
             result = movies_schema.dump(filtered)
+            if len(result) == 0:
+                return {"Error":"Your search returned zero results"},404
             return jsonify(result)
         if request.args.get('date_added'):
             filtered = Movie.query.filter_by(date_added=request.args.get('date_added'))
             result = movies_schema.dump(filtered)
+            if len(result) == 0:
+                return {"Error":"Your search returned zero results"},404
             return jsonify(result)
         else:
             return {"Error":"You may have typed, genre, title, or date_added wrong."}, 401
@@ -101,17 +109,39 @@ def update_movie(id):
 def get_movie_recommendations():
     if not get_jwt_identity():
         return {"error": "User not found"},401
+    # Get the user preferences of what genre they are interested in
     user_id = get_jwt_identity() 
     user = User.query.get(user_id)
-    movies = {}
-    preferences = preferences_schema.dump(user.preferences)
-    preference = preferences[0]
-    if preference["comedy"] == True:
-        comedy = Movie.query.filter_by(genre="comedy").all()
-        for movie in comedy:
-            movies[movie.movie_id] = movies
-            print(movie)    
-        return jsonify(movie_schema.dump(movie))
+    user_preferences = preferences_schema.dump(user.preferences)
+    user_preference = user_preferences[0]
+    # Find movies that the user is interested in via the preference and movie genres
+    movies = []
+    for preference in all_preferences:   
+        if user_preference[preference] == True:
+            results = Movie.query.filter_by(genre=preference).all()
+            for movie in results:
+                movies.append(movie_schema.dump(movie))
+    # Find the recommended service by counting movies by service name           
+    recommended_service = ""
+    service_count = {}
+    for movie in movies:
+        service_name = movie["service"]["name"]
+        if not service_name in service_count:
+            service_count[service_name] = 0
+        service_count[service_name] += 1
+    
+    highest_count = -1
+    for service, count in service_count.items():
+        if count > highest_count:
+            recommended_service = service
+            highest_count = count     
+    # Build the response
+    response = {
+        "recommendations": movies,
+        "recommended_service": recommended_service,       
+    }        
+    
+    return jsonify(response)
 
     
 

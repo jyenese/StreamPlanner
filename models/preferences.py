@@ -12,3 +12,5 @@ class Preference(db.Model):
     drama = db.Column(db.Boolean)
     science_fiction = db.Column(db.Boolean)
     user_id = db.Column(db.Integer, db.ForeignKey("users.user_id"))
+    
+all_preferences =  ["action","comedy","adventure","fantasy","horror","mystery","drama","science_fiction"]
