@@ -163,11 +163,25 @@ Same as POST, authentication required by an admin, once accepted in, the tv_show
 Admin token needed again, JWT authentication. Once connected, fields are loaded with the service schema, then the fields that need to be placed in the put request. "title, genre, date_added, and service id" onces submitted, the route is committed and published by jsonify.
 </details>
 
-----------------------------------------------------------------
+#
 
-INSERT ERD HERE
+<details>
+<summary>ERD</summary>
+![ERD](/screenshots/ERD.png)
 
-----------------------------------------------------------------
+The USERS table in my ERD is the starting block for this API, without the user theres no point in the database. The users details all have a part to play in the product, especially when one to many relationship with the Preference table, the preferences for each user allows the database to store seperate data for each user and what types of movies/tv shows via genre they like. The structure of StreamPlanner truly runs of what types of genre the user likes.
+
+The Movie and TV Show tables are spitting images of eachother apart from the PrimaryKeys. They both need to be a part of the database, all streaming services do is produce tv shows/movies for you, and this is our way of doing that. But each of these movie IDs and TV IDs need a service provider, thats where the one to many relationship comes from, the Services table. An admin of the database has access to addding a service tag to each movie, and this service tag is what makes the application, shows you where the movies/tv shows are available and for what price.
+</details>
+<br>
+
+<details>
+<summary>Examples:</summary>
+![image](screenshots/examplemovie.png)
+![image](screenshots/exampletv.png)
+</details>
+
+#
 
 # Detail any third party services that your app will use
 
@@ -276,6 +290,29 @@ Description column was added for a short little bio, or later on down the track 
 <summary>Movie Model</summary>
 
 Movie_ID is the primary key for the movie model, this ID is the linking factor for the movie titles generically.
+
+Title is the name of the movie
+
+Genre, now this is a major column for my API, this genre links with the booleans in the preferences to produce what services you should buy. If the movie is a Comedy, and you like comedy movies/tv shows, this will show all the movies/tvshows on the database with the comedy genre.
+
+Date_added, is there for the feature of what date the film came out, plus a bonus of potentially adding in a futures or an up coming route which shows movies/tvshows that are coming out.
+
+Service_id, the ForeignKey for the movie table, this ID is linked with the service provider of which the movie is currently on, and will show in the final product.
+</details>
+<details>
+<summary>TV Show Model</summary>
+
+Tv_show_ID is the primary key for the TVSHOW model, this ID is the linking factor for the tv shows titles generically.
+
+Title is the name of the tv show
+
+Genre, now this is a major column for my API, this genre links with the booleans in the preferences to produce what services you should buy. If the tv show is a Comedy, and you like comedy movies/tv shows, this will show all the movies/tvshows on the database with the comedy genre.
+
+Date_added, is there for the feature of what date the film came out, plus a bonus of potentially adding in a futures or an up coming route which shows movies/tvshows that are coming out.
+
+Service_id, the ForeignKey for the tv show table, this ID is linked with the service provider of which the tv show is currently on, and will show in the final product.
+</details>
+
 
 
 

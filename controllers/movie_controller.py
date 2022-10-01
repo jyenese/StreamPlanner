@@ -29,19 +29,23 @@ def get_movies():
             result = movies_schema.dump(filtered)
             return jsonify(result)
         else:
-            return {"Error":"You may have typed, genre, title, or date_added wrong."}, 200
+            return {"Error":"You may have typed, genre, title, or date_added wrong."}, 401
     movies_list = Movie.query.all()
     result = movies_schema.dump(movies_list)
-    return jsonify(movies_schema.dump(result)),200
-
+    return jsonify(result),200
+#This GET request is to provide a route to a specific ID with the <int:id> parameter
+# Gets the movie ID from the database with the Query, If not in the database you get an error 200
+# Then dumped the schema to return a jsonified version (200)
 @movies.route("/<int:id>", methods=['GET'])
 def get_movie(id):
     movie = Movie.query.get(id)
     if not movie:
-        return {"error": "Movie ID not found"}
+        return {"error": "Movie ID not found"},401
     result = movie_schema.dump(movie)
     return jsonify(result),200
 
+#This route is for admins only, POST(add) into the database, once admin token is provided, you have the ability to POST
+# Using the fields provided
 @movies.route("/add", methods=['POST'])
 @jwt_required()
 def add_movie():
@@ -58,6 +62,7 @@ def add_movie():
     db.session.commit()
     return jsonify(movie_schema.dump(movie)),201
 
+#This route is for admins only, Delete an ID from the database, once admin token is provided, you have the ability to delete
 @movies.route("/delete/<int:id>", methods=['DELETE'])
 @jwt_required()
 def delete_movie(id):
@@ -69,7 +74,8 @@ def delete_movie(id):
     db.session.delete(movie)
     db.session.commit()    
     return {"message":"Movie has been deleted from the database"},201
-
+#This route is for admins only, PUT(Update) into the database, once admin token is provided, you have the ability to update
+# Using the fields provided
 @movies.route("/update/<int:id>", methods=['PUT'])
 @jwt_required()
 def update_movie(id):
@@ -94,7 +100,7 @@ def update_movie(id):
 @jwt_required()
 def get_movie_recommendations():
     if not get_jwt_identity():
-        return {"error": "User not found"}
+        return {"error": "User not found"},401
     user_id = get_jwt_identity() 
     user = User.query.get(user_id)
     movies = {}
