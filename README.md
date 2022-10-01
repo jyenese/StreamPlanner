@@ -193,8 +193,10 @@ Create Access Token
 
 JWT manager
 - Is a key part to my database, all of the controllers are authenticated via a token. JWT manager makes storing and retrieving these said tokens easier. 
+
 JWT required
 - Is the other side of the access token, authenticating with JWT required is making sure all of the desired routes that I think need authentication have it. So calling for JWT required gives me the ability to add that step forward on only allowing certain users in. I've used this in all of my POST and PUT methods, some others, but mainly them. Mainly for authentication for the admin token.
+
 Get JWT Identity
 - Another side of the authentication proccess, this is the method of how you authenticate if the admin token is correct or not, (Well thats how I've been using it). Authenticates the token to make sure only "Admin" tokens are allowed into the route.
 
@@ -216,3 +218,64 @@ Get JWT Identity
 
 - this library is the absolute backbone of this API, its the joining product of my database and my code. Its the main ORM of my product and it cannot run without it. 
 </details>
+
+# Describe your projects models in terms of the relationships they have with each other
+
+<details>
+<summary>Admin Model</summary>
+
+This model is very simple, is linked with nothing else in the database.
+
+Admin_ID = a Integer which is the primary key, this id has access to all of the adding/deleting/updating features on streamplanner.
+
+Username = only one admin, so the username will always be admin.
+ 
+password = is hidden with the bcrypt library.
+</details>
+<details>
+<summary> User Model </summary>
+
+This model steps it up a little bit, most of the data saved in the database will link up in someway down the path.
+
+User_id = the primary key, this ID is the way you will be starting the linking proccess to Streamplanner.
+I decided not to add first and last name to this model as it's not needed, no point asking for something thats not needed.
+
+Username is a unique string that links the username to the users account.
+
+Email adress is also a unique string that is a pivital part of the sign up, an email address is a good way of authenticating who the user is incase of loss of password, or loss of username. Its also a great way of notifiying a user on up coming movies/tv shows.
+
+password = is hidden with the bcrypt library.
+
+dob is a way of authenticating age, incase for later on down the path If movies that have an age description on them, we can filter out the movies/tv shows. e.g If a Movie Is MA15+, and the user is only 14 years of age, it wont show these types of movies.
+
+Country is also another way of authenticating, but for this case where you are in the world, at the moment all the streaming services are the ones only located in Australia, or the ones available for Australians. But potentially one day I can filter the ones not available in your area.
+ 
+</details>
+
+<details>
+<summary>Preferences Model</summary>
+
+Preference_id  is the primary key this key will be used to link the preferences with the user, then onto the final product.
+
+The next 8 parts of the model are all types of genres [Action, Adventure, Comedy, Fantasy, Horror, Mystery, Drama, Science Fiction] which are all true/false factors (boolean) this is to show what genres you like and dont like, this data is what helps produce the final product on what streaming platforms you should go with.
+
+The User_id is the ForeignKey of the preferences model, this is the way of linking the user to the preferences.
+</details>
+<details>
+<summary>Services Model</summary>
+
+Because of the way the API is structured, the streaming services have an ID and are only accessible via the admin, so all of the services are attatched to a "Service_id", This ID is the primary key for the services model, and a pivital part of my API.
+
+The name of the service is a mandatory part of the service model, you can't pick which service you want without knowing the name.
+
+The price column was added incase the user had a price range they wanted to work with.
+
+Description column was added for a short little bio, or later on down the track added for what parts of the world its available in.
+</details>
+<details>
+<summary>Movie Model</summary>
+
+Movie_ID is the primary key for the movie model, this ID is the linking factor for the movie titles generically.
+
+
+

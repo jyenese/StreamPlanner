@@ -5,4 +5,4 @@ class Admin(db.Model):
     admin_id = db.Column(db.Integer, primary_key=True)
     username = db.Column(db.String(), nullable=False, unique=True)
     password = db.Column(db.String(), nullable=False)
-    email_address = db.Column(db.String(), nullable=False)
+    
