@@ -40,7 +40,7 @@ def register_user():
     
     token = create_access_token(identity=str(user.user_id),expires_delta=timedelta(days=1))
     
-    return {"username":user.username, "token":token}, 200
+    return {"username":user.username,"user_id (You will need this ID to add to preferences):":user.user_id, "token":token}, 200
 
 # Logging in with your username and password, if you dont have one it will come up with an error.
 # Once logged in you can view your recommendations
@@ -103,13 +103,13 @@ def get_preference(id):
 @user.route("preferences/add", methods=['POST'])
 @jwt_required()
 def add_preference():
+    if not get_jwt_identity():
+        return {"error": "User not found"},401
     user_id = get_jwt_identity() 
     user = User.query.get(user_id)
-    if not user:
-        return {"error":"User not found"},401
-    
     preference_fields = preference_schema.load(request.json)
     preference = Preference(
+        user_id = preference_fields["user_id"],
         action = preference_fields["action"],
         adventure = preference_fields["adventure"],
         comedy = preference_fields["comedy"],
@@ -117,7 +117,7 @@ def add_preference():
         horror = preference_fields["horror"],
         mystery = preference_fields["mystery"],
         drama = preference_fields["drama"],
-        science_fiction = preference_fields["science_fiction"],  
+        science_fiction = preference_fields["science_fiction"],
     )
     db.session.add(preference)
     db.session.commit()

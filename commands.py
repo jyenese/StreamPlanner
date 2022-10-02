@@ -53,7 +53,7 @@ def seed_db():
     db.session.commit()
     
     amazon_prime = Services(
-        name = "Amazon_Prime",
+        name = "Amazon Prime",
         price = 11.99,
         description = "Worldwide streaming service."
     )
@@ -61,80 +61,342 @@ def seed_db():
     db.session.add(amazon_prime)
     db.session.commit()
     
-    movie1 = Movie(
+    Disney_plus= Services(
+        name = "Disney Plus",
+        price = 8.99,
+        description = "Worldwide streaming service."
+    )
+    
+    db.session.add(Disney_plus)
+    db.session.commit()
+    
+    AppleTV = Services(
+        name = "Apple TV",
+        price = 14.99,
+        description = "Worldwide streaming service."
+    )
+    
+    db.session.add(AppleTV)
+    db.session.commit()
+    
+
+    
+    db.session.add(Movie(
         title = "Intersteller",
         date_added = date(2014,6,11),
         genre = "science_fiction",
-        service_id = netflix.service_id
-        
-    )
+        service_id = netflix.service_id))
     
-    db.session.add(movie1)
-    db.session.commit()
     
-    movie2 = Movie(
+    db.session.add(Movie(
         title = "The Martian",
         date_added = date(2017,8,11),
-        genre = "mystery",
-        service_id = netflix.service_id
-        
-    )
+        genre = "science_fiction",
+        service_id = netflix.service_id   
+    ))
     
-    db.session.add(movie2)
-    db.session.commit()
-    
-    movie3 = Movie(
+    db.session.add(Movie(
         title = "Intersteller: Reborn",
         date_added = date(2024,6,11),
-        genre = "comedy",
-        service_id = stan.service_id
-        
-    )
+        genre = "science_fiction",
+        service_id = netflix.service_id        
+    ))
     
-    db.session.add(movie3)
-    db.session.commit()
-    
-    movie4 = Movie(
+    db.session.add(Movie(
         title = "Mean Girls",
         date_added = date(2007,6,11),
-        genre = "comedy",
-        service_id = amazon_prime.service_id,
-        
-    )
+        genre = "Drama",
+        service_id = netflix.service_id,        
+    ))
     
-    db.session.add(movie4)
-    db.session.commit()
+    db.session.add(Movie(
+        title = "The GodFather",
+        date_added = date(1972,6,1),
+        genre = "Drama",
+        service_id = binge.service_id,        
+    ))
     
-    tv1 = Tv_show(
-        title = "True Blood",
-        date_added = date(2011,4,11),
-        genre = "science_fiction",
-        service_id = stan.service_id
-        
-    )
+    db.session.add(Movie(
+        title = "The Shawshank Redemption",
+        date_added = date(1994,3,11),
+        genre = "Drama",
+        service_id = binge.service_id,        
+    ))
     
-    db.session.add(tv1)
-    db.session.commit()
+    db.session.add(Movie(
+        title = "Die Hard",
+        date_added = date(1988,3,21),
+        genre = "action",
+        service_id = binge.service_id,        
+    ))
     
-    tv2 = Tv_show(
-        title = "House of the Dragon",
-        date_added = date(2022,8,3),
+    db.session.add(Movie(
+        title = "Mad Max 2: The Road Warrior",
+        date_added = date(1981,2,11),
+        genre = "action",
+        service_id = binge.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Terminator 2: Judgement Day",
+        date_added = date(1991,1,1),
+        genre = "action",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Thor: Love and Thunder",
+        date_added = date(2022,3,21),
         genre = "adventure",
-        service_id = stan.service_id
-        
-    )
-    db.session.add(tv2)
-    db.session.commit()
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Avatar: The Way of Water",
+        date_added = date(2022,8,11),
+        genre = "adventure",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Lord of the Rings: The Fellowship of the Ring",
+        date_added = date(2001,2,11),
+        genre = "adventure",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Step Brothers",
+        date_added = date(2008,2,11),
+        genre = "comedy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "SuperBad",
+        date_added = date(2007,6,11),
+        genre = "comedy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Dumb and Dumber",
+        date_added = date(1994,1,11),
+        genre = "comedy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "The Hobbit: An Unexpected Journey",
+        date_added = date(2012,3,14),
+        genre = "fantasy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Peter Pan",
+        date_added = date(2002,2,11),
+        genre = "fantasy",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Pinocchio",
+        date_added = date(2019,1,11),
+        genre = "fantasy",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Saw: Original",
+        date_added = date(2004,2,11),
+        genre = "horror",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Hellraiser",
+        date_added = date(1987,2,11),
+        genre = "horror",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Kill List",
+        date_added = date(2009,2,11),
+        genre = "horror",
+        service_id = AppleTV.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Saw: Original",
+        date_added = date(2004,2,11),
+        genre = "horror",
+        service_id = AppleTV.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "The Girl with The Dragon Tattoo",
+        date_added = date(2011,1,13),
+        genre = "mystery",
+        service_id = AppleTV.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Kiss the Girls",
+        date_added = date(1997,4,13),
+        genre = "mystery",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Movie(
+        title = "Get Out",
+        date_added = date(2001,1,13),
+        genre = "mystery",
+        service_id = netflix.service_id,        
+    ))
     
     
     db.session.add(Tv_show(
-        title = "Survivor",
-        date_added = date(2001,4,11),
+        title = "Intersteller",
+        date_added = date(2014,6,11),
         genre = "science_fiction",
-        service_id = netflix.service_id
-        
+        service_id = netflix.service_id))
+    
+    
+    db.session.add(Tv_show(
+        title = "The Martian",
+        date_added = date(2017,8,11),
+        genre = "science_fiction",
+        service_id = netflix.service_id   
     ))
-    db.session.commit()
+    
+    db.session.add(Tv_show(
+        title = "Intersteller: Reborn",
+        date_added = date(2024,6,11),
+        genre = "science_fiction",
+        service_id = netflix.service_id        
+    ))
+    
+    db.session.add(Tv_show(
+        title = "Mean Girls",
+        date_added = date(2007,6,11),
+        genre = "Drama",
+        service_id = netflix.service_id,        
+    ))
+    
+    db.session.add(Tv_show(
+        title = "The GodFather",
+        date_added = date(1972,6,1),
+        genre = "Drama",
+        service_id = binge.service_id,        
+    ))
+    
+    db.session.add(Tv_show(
+        title = "The Shawshank Redemption",
+        date_added = date(1994,3,11),
+        genre = "Drama",
+        service_id = binge.service_id,        
+    ))
+    
+    db.session.add(Tv_show(
+        title = "Die Hard",
+        date_added = date(1988,3,21),
+        genre = "action",
+        service_id = binge.service_id,        
+    ))
+    
+    db.session.add(Tv_show(
+        title = "Mad Max 2: The Road Warrior",
+        date_added = date(1981,2,11),
+        genre = "action",
+        service_id = binge.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Terminator 2: Judgement Day",
+        date_added = date(1991,1,1),
+        genre = "action",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Thor: Love and Thunder",
+        date_added = date(2022,3,21),
+        genre = "adventure",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Avatar: The Way of Water",
+        date_added = date(2022,8,11),
+        genre = "adventure",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Lord of the Rings: The Fellowship of the Ring",
+        date_added = date(2001,2,11),
+        genre = "adventure",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Step Brothers",
+        date_added = date(2008,2,11),
+        genre = "comedy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "SuperBad",
+        date_added = date(2007,6,11),
+        genre = "comedy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Dumb and Dumber",
+        date_added = date(1994,1,11),
+        genre = "comedy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "The Hobbit: An Unexpected Journey",
+        date_added = date(2012,3,14),
+        genre = "fantasy",
+        service_id = amazon_prime.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Peter Pan",
+        date_added = date(2002,2,11),
+        genre = "fantasy",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Pinocchio",
+        date_added = date(2019,1,11),
+        genre = "fantasy",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Saw: Original",
+        date_added = date(2004,2,11),
+        genre = "horror",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Hellraiser",
+        date_added = date(1987,2,11),
+        genre = "horror",
+        service_id = Disney_plus.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Kill List",
+        date_added = date(2009,2,11),
+        genre = "horror",
+        service_id = AppleTV.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Saw: Original",
+        date_added = date(2004,2,11),
+        genre = "horror",
+        service_id = AppleTV.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "The Girl with The Dragon Tattoo",
+        date_added = date(2011,1,13),
+        genre = "mystery",
+        service_id = AppleTV.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Kiss the Girls",
+        date_added = date(1997,4,13),
+        genre = "mystery",
+        service_id = stan.service_id,        
+    ))
+    db.session.add(Tv_show(
+        title = "Get Out",
+        date_added = date(2001,1,13),
+        genre = "mystery",
+        service_id = netflix.service_id,        
+    ))
     
     
     admin1 = Admin(

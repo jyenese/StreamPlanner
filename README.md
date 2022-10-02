@@ -1,3 +1,12 @@
+### 
+Name: Jye Calder-Mason
+
+Project: Term2 Coder Academy API Project
+
+Github: https://github.com/jyenese/StreamPlanner/tree/master
+
+
+
 # Identification of the problem you are trying to solve by building this particular app.
 
 In this day in age, there are that many streaming platforms that I couldn't name them all on two hands, and what comes with that is the seperation of hundreds if not thousands of movies and television shows that only supply certain streaming platforms. This problem has become incredibly annoying and for a lot of people, very expensive! 
@@ -126,6 +135,20 @@ Same as POST, authentication required by an admin, once accepted in, the movie i
 
 Admin token needed again, JWT authentication. Once connected, fields are loaded with the service schema, then the fields that need to be placed in the put request. "title, genre, date_added, and service id" onces submitted, the route is committed and published by jsonify.
 </details>
+<details>
+<summary>/movies/recommendations</summary>
+
+Authentication to this route is required by the user, this authentication connects you with the user id, which then connects you to the preferences of the user.
+
+After the authentication, the user_id is connected to the preferences_schema, which then produces the genres liked by the user.
+
+An empty list is created for the movies to be added into with the correct genre. "All_preferences" is created in the preferences schema, for easy exporting, this list is put into a for loop to see which preferences are true, If one or more of the preferences are true, it appends to the list then dumps it.
+
+The recommended service is an empty string, for the end product, this part of the code is counting the movies with the same service id, and the one with the most service ids gets added into the "recommended_service" string for the end product. 
+
+at the response, The movies that are produced are the movies inside the database with the preferences that you desire. With the most recommended service you should use. Eg. "Netflix..."
+
+</details>
 <br>
 
 # Tv_show Endpoints
@@ -162,6 +185,22 @@ Same as POST, authentication required by an admin, once accepted in, the tv_show
 <br>
 Admin token needed again, JWT authentication. Once connected, fields are loaded with the service schema, then the fields that need to be placed in the put request. "title, genre, date_added, and service id" onces submitted, the route is committed and published by jsonify.
 </details>
+<details>
+<summary>/tv_shows/recommendations</summary>
+
+Authentication to this route is required by the user, this authentication connects you with the user id, which then connects you to the preferences of the user.
+
+After the authentication, the user_id is connected to the preferences_schema, which then produces the genres liked by the user.
+
+An empty list is created for the movies to be added into with the correct genre. "All_preferences" is created in the preferences schema, for easy exporting, this list is put into a for loop to see which preferences are true, If one or more of the preferences are true, it appends to the list then dumps it.
+
+The recommended service is an empty string, for the end product, this part of the code is counting the tv_shows with the same service id, and the one with the most service ids gets added into the "recommended_service" string for the end product. 
+
+at the response, The tv_shows that are produced are the movies inside the database with the preferences that you desire. With the most recommended service you should use. Eg. "Netflix..."
+
+</details>
+
+
 
 #
 
@@ -179,8 +218,8 @@ The Movie and TV Show tables are spitting images of eachother apart from the Pri
 <details>
 <summary>Examples:</summary>
 
-![image](screenshots/examplemovie.png)
-![image](screenshots/exampletv.png)
+![examplemovie](screenshots/examplemovie.png)
+![exampletv](screenshots/exampletv.png)
 </details>
 
 #
@@ -234,6 +273,7 @@ Get JWT Identity
 
 - this library is the absolute backbone of this API, its the joining product of my database and my code. Its the main ORM of my product and it cannot run without it. 
 </details>
+<br>
 
 # Describe your projects models in terms of the relationships they have with each other
 
@@ -313,6 +353,31 @@ Genre, now this is a major column for my API, this genre links with the booleans
 Date_added, is there for the feature of what date the film came out, plus a bonus of potentially adding in a futures or an up coming route which shows movies/tvshows that are coming out.
 
 Service_id, the ForeignKey for the tv show table, this ID is linked with the service provider of which the tv show is currently on, and will show in the final product.
+</details>
+<br>
+
+# Discuss the database relations to be implemented in your application
+
+Inside my application you should see relationships with the user and the preferences of genres for movies and tv shows, this data lets the database filter between what genres the user likes, and doesnt like for the end product.
+
+You should also see relationships between movies/tvshows and streaming service providers, this link is a key part to the database, as the whole project is about saving money in the longrun. 
+
+# Describe the way tasks are allocated and tracked in your project
+
+I've never been a good planner, and thats going to be something I'll have to learn on. I started out with little idea on how I was going to get the ball rolling, with atleast 6 attempts on the ERD trying to get it correct, (I'll post some below), At some points I felt like I had made a horrible decision on what task I had put infront of me but, we got there in the long run! 
+
+Because of the bad planning, It would be a good recomendation to look through my github commits too see how my progress went with 20+ commits. 
+<details>
+<summary>Photos:</summary>
+
+![image](screenshots/erd3.png)
+![image](screenshots/erd2.png)
+![image](screenshots/erd1.png)
+
+This was how I was trying to picture how the data would be structured in the database, this was an absolute eye opener for me. Coming from no relational database experience to now, this was a big help in figuring out how tables would link together.
+
+![image](screenshots/database.png)
+
 </details>
 
 

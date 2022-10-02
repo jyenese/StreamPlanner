@@ -33,8 +33,6 @@ def get_movies():
         if request.args.get('date_added'):
             filtered = Movie.query.filter_by(date_added=request.args.get('date_added'))
             result = movies_schema.dump(filtered)
-            if len(result) == 0:
-                return {"Error":"Your search returned zero results"},404
             return jsonify(result)
         else:
             return {"Error":"You may have typed, genre, title, or date_added wrong."}, 401
